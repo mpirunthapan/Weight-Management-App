@@ -23,13 +23,13 @@ const getWeights = async (req, res) => {
     catch (e) {
         res.status(400).json({error: e.message});
     }
-}
+};
 
 //To get single Weight
 const getSingleWeight = async (req, res) => {
     const {id} = req.params
     if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({message: 'Weight not Found'});
+        return res.status(404).json({error: 'Weight not Found'});
     }
     try {
         const singleweight = await WeightModel.findById(id)
@@ -38,6 +38,43 @@ const getSingleWeight = async (req, res) => {
     catch (e) {
         res.status(400).json({error: e.message});
     }
-}
+};
 
-module.exports = {createWeight, getWeights, getSingleWeight};
+//To update Weight
+const updateWeight = async (req, res) => {
+    const {id} = req.params
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({error: 'Weight not Found'});
+    }
+    try {
+        const weight = await weightModel.findByIdAndUpdate({
+            _id:id
+        },
+        {
+            ...req.body
+        }
+    )
+    res.status(200).json(weight);
+    }
+    catch (e) {
+        res.status(400).json({error: e.message});
+    }
+};
+
+//To delete a Weight
+const deleteWeight = async (req, res) => {
+    const {id} = req.params
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({error: 'Weight not Found'});
+    }
+    try {
+        const weight = await weightModel.findByIdAndDelete(id);
+        res.status(200).json(weight);
+    }
+    catch (e) {
+        res.status(400).json({error: e.message});
+    }
+};
+
+
+module.exports = {createWeight, getWeights, getSingleWeight, updateWeight, deleteWeight};
